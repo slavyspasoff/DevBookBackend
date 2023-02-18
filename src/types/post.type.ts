@@ -1,7 +1,7 @@
 import { type Model, type Types } from 'mongoose'
 
 interface Post {
-  userId: Types.ObjectId
+  user: Types.ObjectId
   desc: string
   title: string
   picturePath?: string

@@ -7,7 +7,7 @@ import {
 
 const postSchema = new Schema<PostDocument, PostModel, PostMethods>(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -49,7 +49,7 @@ const postSchema = new Schema<PostDocument, PostModel, PostMethods>(
 )
 
 postSchema.pre(/^find/, function (next) {
-  this.populate({ path: 'userId' })
+  this.populate({ path: 'user', select: 'username userPic nickname' })
   next()
 })
 
