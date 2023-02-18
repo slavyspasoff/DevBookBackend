@@ -10,6 +10,7 @@ import passport from 'passport'
 import JWTStrategy from './middleware/passportJWT.middleware.js'
 
 import authRouter from './routers/auth.router.js'
+import userRouter from './routers/user.router.js'
 import postRouter from './routers/post.router.js'
 
 const app = express()
@@ -33,6 +34,7 @@ JWTStrategy(passport)
 app.use('/uploads', express.static(uploadsFolderPath))
 
 app.use('/api', authRouter)
+app.use('/api/users', userRouter)
 app.use('/api/posts', postRouter)
 
 export { app as default }
