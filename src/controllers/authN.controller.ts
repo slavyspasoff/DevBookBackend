@@ -4,7 +4,7 @@ import { type Request, type Response } from 'express'
 
 import User, { type UserDocument } from '../models/user.model.js'
 import catchAsync from '../utils/catchAsync.js'
-import { signToken } from './authN.helpers.js'
+import { signToken, verifyFileUpload, type Files } from './authN.helpers.js'
 
 const { NODE_ENV } = env as Env
 
@@ -26,15 +26,15 @@ const register = catchAsync(
     res: Response<ResBody>
   ) => {
     const { username, email, password, confirm } = req.body
-    // const { userBanner, userPic } = verifyFileUpload(req.files)
+    const { userBanner, userPic } = verifyFileUpload(req.files as Files)
 
     const data: Partial<UserDocument> = await User.create({
       username,
       email,
       password,
       confirm,
-      // userPic,
-      // userBanner,
+      userPic,
+      userBanner,
     })
 
     data.password = undefined

@@ -1,4 +1,8 @@
-import multer, { type Options, type DiskStorageOptions } from 'multer'
+import multer, {
+  type Options,
+  type DiskStorageOptions,
+  type Field,
+} from 'multer'
 
 const storageOptions: DiskStorageOptions = {
   destination: './uploads/images',
@@ -14,7 +18,7 @@ const options: Options = {
   limits: { fieldSize: 50 * 1024 * 1024 },
 }
 
-const fields = [
+const fields: Field[] = [
   { name: 'userPic', maxCount: 1 },
   { name: 'userBanner', maxCount: 1 },
 ]
