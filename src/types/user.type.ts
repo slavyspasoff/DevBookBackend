@@ -18,7 +18,9 @@ interface UserDocument extends User {
   updatedAt: Date
 }
 
-interface UserMethods {}
+interface UserMethods {
+  verifyPassword(v: string): Promise<boolean>
+}
 
 type UserModel = Model<UserDocument, Record<string, never>, UserMethods>
 

@@ -93,4 +93,9 @@ UserSchema.virtual('posts', {
 
 const User = model<UserDocument, UserModel>('User', UserSchema)
 
-export default User
+export { User as default }
+export {
+  type UserDocument,
+  type UserModel,
+  type UserMethods,
+} from '../types/user.type.js'
