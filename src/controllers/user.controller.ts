@@ -110,6 +110,7 @@ const updateUser = catchAsync(async (req, res, next) => {
   if (userPic) {
     await deleteReplacedPicture(req.user as UserDocument, 'userPic')
   }
+  console.log(req.files)
   res.status(200).json({
     status: 'success',
     data,
