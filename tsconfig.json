@@ -101,5 +101,6 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", ".git", "static"]
+  "exclude": ["node_modules", "dist", ".git", "static"],
+  "files": ["./src/types/env.type.d.ts"]
 }
