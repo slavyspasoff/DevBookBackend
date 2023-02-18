@@ -28,7 +28,7 @@ const register = catchAsync(
     const { username, email, password, confirm } = req.body
     const { userBanner, userPic } = verifyFileUpload(req.files as Files)
 
-    const data: Partial<UserDocument> = await User.create({
+    const data = await User.create({
       username,
       email,
       password,
@@ -37,9 +37,9 @@ const register = catchAsync(
       userBanner,
     })
 
-    data.password = undefined
+    data.password = undefined as unknown as string
 
-    const token = signToken(data._id!.toString())
+    const token = signToken(data._id.toString())
 
     res
       .cookie('access_token', token, {
