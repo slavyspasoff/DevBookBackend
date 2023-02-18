@@ -24,12 +24,10 @@ const verifyFileUpload = (files: Files) => {
   let userBanner = undefined
   let userPic = undefined
   if (files.userBanner) {
-    userBanner = files.userBanner[0].destination.concat(
-      files.userBanner[0].originalname
-    )
+    userBanner = files.userBanner[0].path
   }
   if (files.userPic) {
-    userPic = files.userPic[0].destination.concat(files.userPic[0].originalname)
+    userPic = files.userPic[0].path
   }
   return { userBanner, userPic }
 }
