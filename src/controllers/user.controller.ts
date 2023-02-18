@@ -4,7 +4,7 @@ import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import { verifyFileUpload, type Files } from './authN.helpers.js'
 import User, { type UserDocument } from '../models/user.model.js'
-
+import { deleteReplacedPicture } from './user.helpers.js'
 interface ResBody {
   status: 'success'
   data: UserDocument
@@ -88,7 +88,6 @@ const updateUser = catchAsync(async (req, res, next) => {
   if (userID.toString() !== id) {
     return next(new AppError('Users can edit only their own profile.', 401))
   }
-  console.log(req.files)
   const { username, nickname, quote, email } = req.body
   const { userBanner, userPic } = verifyFileUpload(req.files as Files)
 
@@ -105,6 +104,12 @@ const updateUser = catchAsync(async (req, res, next) => {
     { new: true, runValidators: true }
   ).orFail(new AppError('User profile deleted.', 404))
 
+  if (userBanner) {
+    await deleteReplacedPicture(req.user as UserDocument, 'userBanner')
+  }
+  if (userPic) {
+    await deleteReplacedPicture(req.user as UserDocument, 'userPic')
+  }
   res.status(200).json({
     status: 'success',
     data,

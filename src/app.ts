@@ -37,4 +37,4 @@ app.use('/api', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/posts', postRouter)
 
-export { app as default }
+export { app as default, __dirname }
