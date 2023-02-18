@@ -28,7 +28,7 @@ const postSchema = new Schema<PostDocument, PostModel, PostMethods>(
       ],
       required: true,
     },
-    picturePath: {
+    image: {
       type: String,
     },
     likes: {

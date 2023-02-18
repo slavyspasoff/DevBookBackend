@@ -78,7 +78,6 @@ const login = catchAsync(
     if (!email || !password) {
       return next(new AppError('Invalid email or password.', 401))
     }
-
     const query = User.findOne({ email }).select('+password')
 
     if (friends === 'true') {
@@ -92,7 +91,6 @@ const login = catchAsync(
     if (posts === 'true') {
       query.populate({
         path: 'posts',
-        select: 'username desc userPic likes comments -userId',
       })
     }
 
