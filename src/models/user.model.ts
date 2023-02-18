@@ -88,7 +88,7 @@ UserSchema.methods.verifyPassword = async function (
 UserSchema.virtual('posts', {
   ref: 'Post',
   localField: '_id',
-  foreignField: 'userId',
+  foreignField: 'user',
 })
 
 const User = model<UserDocument, UserModel>('User', UserSchema)

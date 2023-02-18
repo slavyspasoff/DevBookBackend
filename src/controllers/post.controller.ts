@@ -18,15 +18,13 @@ const createPost = catchAsync(
     res: Response<ResBody>
   ) => {
     const { desc, title } = req.body
-    const { _id: user, username, userPic } = req.user as UserDocument
+    const { _id: user } = req.user as UserDocument
 
     const image = req.file ? req.file.path : undefined
     const data = await Post.create({
       user,
       desc,
       title,
-      username,
-      userPic,
       image,
     })
 

@@ -91,7 +91,6 @@ const login = catchAsync(
     if (posts === 'true') {
       query.populate({
         path: 'posts',
-        select: 'username desc userPic likes comments -userId',
       })
     }
 
