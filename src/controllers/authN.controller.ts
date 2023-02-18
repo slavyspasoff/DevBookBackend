@@ -1,6 +1,11 @@
 import { env } from 'process'
 
-import { type Request, type Response, type NextFunction } from 'express'
+import {
+  type Request,
+  type Response,
+  type NextFunction,
+  type CookieOptions,
+} from 'express'
 
 import User, { type UserDocument } from '../models/user.model.js'
 import { signToken, verifyFileUpload, type Files } from './authN.helpers.js'
@@ -42,24 +47,23 @@ const register = catchAsync(
 
     const token = signToken(data._id.toString())
 
-    res
-      .status(201)
-      .cookie('access_token', token, {
-        httpOnly: true,
-        secure: NODE_ENV === 'production' ? true : false,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      })
-      .json({
-        status: 'success',
-        data,
-        token,
-      })
+    res.status(201).cookie('access_token', token, cookieOptions).json({
+      status: 'success',
+      data,
+      token,
+    })
   }
 )
 
 interface LoginReqBody {
   email?: string
   password?: string
+}
+
+const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  secure: NODE_ENV === 'production' ? true : false,
+  maxAge: 30 * 24 * 60 * 60 * 1000,
 }
 
 const login = catchAsync(
@@ -83,6 +87,8 @@ const login = catchAsync(
         select: 'username userPic nickname',
       })
     }
+
+    //TODO: Check if still throws an error after creating Post collection
     if (posts === 'true') {
       query.populate({
         path: 'posts',
@@ -102,7 +108,7 @@ const login = catchAsync(
 
     const token = signToken(data._id.toString())
 
-    res.status(200).json({
+    res.status(200).cookie('access_token', token, cookieOptions).json({
       status: 'success',
       data,
       token,
@@ -110,4 +116,17 @@ const login = catchAsync(
   }
 )
 
-export { register, login }
+const logout = (req: Request, res: Response) => {
+  res
+    .status(204)
+    .clearCookie('access_token', {
+      httpOnly: true,
+      secure: NODE_ENV === 'production' ? true : false,
+    })
+    .json({
+      status: 'success',
+      data: null,
+    })
+}
+
+export { register, login, logout }
