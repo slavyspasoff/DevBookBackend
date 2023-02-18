@@ -1,9 +1,9 @@
 import { type Request, type Response } from 'express'
 
 import Post, { type PostDocument } from '../models/post.model.js'
+import { type UserDocument } from '../types/user.type.js'
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
-import { type UserDocument } from '../types/user.type.js'
 import { getPagination } from './post.helper.js'
 
 type CreateReqBody = Pick<PostDocument, 'desc' | 'title' | 'image'>
