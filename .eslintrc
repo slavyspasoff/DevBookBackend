@@ -22,7 +22,6 @@
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-floating-promises": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-unsafe-assign-any": "warn",
     "prettier/prettier": "warn"
   }
 }
