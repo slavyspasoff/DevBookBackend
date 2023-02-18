@@ -23,4 +23,7 @@ const fields: Field[] = [
   { name: 'userBanner', maxCount: 1 },
 ]
 
-export default multer(options).fields(fields)
+const profileUploads = multer(options).fields(fields)
+const postUploads = multer(options).single('image')
+
+export { profileUploads, postUploads }

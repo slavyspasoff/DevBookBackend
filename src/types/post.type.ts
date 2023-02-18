@@ -4,7 +4,7 @@ interface Post {
   user: Types.ObjectId
   desc: string
   title: string
-  picturePath?: string
+  image?: string
   likes: Types.ObjectId[]
   comments: string[]
 }
