@@ -49,8 +49,7 @@ const getAllPosts = catchAsync(
       GetAllResBody,
       Record<PropertyKey, never>
     >,
-    res: Response<GetAllResBody>,
-    next
+    res: Response<GetAllResBody>
   ) => {
     const query = Post.find({})
 
@@ -69,4 +68,42 @@ const getAllPosts = catchAsync(
   }
 )
 
-export { createPost, getAllPosts }
+const getPost = catchAsync(
+  async (
+    req: Request<Record<string, string>, ResBody, Record<PropertyKey, never>>,
+    res: Response<ResBody>
+  ) => {
+    const { id } = req.params
+    const data = await Post.findById(id).orFail(
+      new AppError('Post not found.', 404)
+    )
+
+    res.status(200).json({
+      status: 'success',
+      data,
+    })
+  }
+)
+
+const deletePost = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const { _id: userID } = req.user as UserDocument
+
+  const data = await Post.findById(id).orFail(
+    new AppError('Post not found.', 404)
+  )
+
+  if (data.user._id.toString() !== userID.toString()) {
+    return next(
+      new AppError('Post does not belong to the logged in user.', 401)
+    )
+  }
+  await data.delete()
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  })
+})
+
+export { createPost, getAllPosts, getPost, deletePost }
