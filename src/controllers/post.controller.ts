@@ -4,6 +4,7 @@ import Post, { type PostDocument } from '../models/post.model.js'
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import { type UserDocument } from '../types/user.type.js'
+import { getPagination } from './post.helper.js'
 
 type CreateReqBody = Pick<PostDocument, 'desc' | 'title' | 'image'>
 
@@ -35,4 +36,37 @@ const createPost = catchAsync(
   }
 )
 
-export { createPost }
+interface GetAllResBody {
+  status: 'success'
+  data: PostDocument[]
+  results: number
+}
+
+const getAllPosts = catchAsync(
+  async (
+    req: Request<
+      Record<string, string>,
+      GetAllResBody,
+      Record<PropertyKey, never>
+    >,
+    res: Response<GetAllResBody>,
+    next
+  ) => {
+    const query = Post.find({})
+
+    const { skip, limit } = getPagination(req.query)
+    query.skip(skip).limit(limit)
+
+    const data = await query.sort({
+      createdAt: -1,
+    })
+
+    res.status(200).json({
+      status: 'success',
+      results: data.length,
+      data,
+    })
+  }
+)
+
+export { createPost, getAllPosts }
