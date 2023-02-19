@@ -6,7 +6,7 @@ import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import { getPagination } from './post.helper.js'
 
-type CreateReqBody = Pick<PostDocument, 'desc' | 'title' | 'image'>
+type CreateReqBody = Partial<Pick<PostDocument, 'desc' | 'title' | 'image'>>
 
 interface ResBody {
   status: 'success'

@@ -11,25 +11,25 @@ const UserSchema = new Schema<UserDocument, UserModel, UserMethods>(
     username: {
       type: String,
       unique: true,
-      required: [true, 'User must have a username'],
+      required: [true, 'User must have a {PATH}'],
       minlength: [3, '{PATH} must be between 3 or more characters long.'],
       maxlength: [30, '{PATH} must be between 30 or less characters long.'],
     },
     email: {
       type: String,
       unique: true,
-      required: [true, 'User must have an email.'],
+      required: [true, 'User must have an {PATH}.'],
       maxlength: [100, '{PATH} must be between 100 or less characters long.'],
       validate: {
         validator: function (v: UserDocument['email']) {
           return v.includes('@') && v.includes('.')
         },
-        message: 'invalid email pattern.',
+        message: 'invalid {PATH} pattern.',
       },
     },
     password: {
       type: String,
-      required: [true, 'please provide a valid password'],
+      required: [true, 'please provide a valid {PATH}'],
       unique: true,
       minlength: [5, '{PATH} must be between 8 and 50 characters long.'],
       maxlength: [50, '{PATH} must be between 8 and 50 characters long.'],
