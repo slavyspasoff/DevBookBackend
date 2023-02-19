@@ -5,18 +5,18 @@ import mongoose from 'mongoose'
 import './dotenv.init.js'
 import app from './app.js'
 
-const { PORT, DB_USER, DB_PASS, DB_URI_BASE, BASE_URL } = env as Env
+const { PORT, DB_USER, DB_PASS, DB_URL_BASE, BASE_URL } = env as Env
 
 const port = Number(PORT) || 5555
 
-const DB_URI = DB_URI_BASE.replace('<username>', DB_USER).replace(
+const DB_URL = DB_URL_BASE.replace('<username>', DB_USER).replace(
   '<password>',
   DB_PASS
 )
 
-mongoose.set('strictQuery', true)
+mongoose.set('strictQuery', false)
 mongoose
-  .connect(DB_URI)
+  .connect(DB_URL)
   .then((M) => {
     console.log(`Connected to ${M.connection.name} database`)
   })

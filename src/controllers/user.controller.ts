@@ -117,4 +117,32 @@ const updateUser = catchAsync(async (req, res, next) => {
   })
 })
 
-export { getAllUsers, getUser, updateUser }
+const addRemoveFriend = catchAsync(async (req, res, next) => {
+  const { id: friendID } = req.params
+  const { _id: userID } = req.user as UserDocument
+  let { friends } = req.user as UserDocument
+
+  const foundFriend = await User.findById(friendID).orFail(
+    new AppError('Friend not found.', 404)
+  )
+  const isFriend = friends.find((e) => e._id.toString() === friendID)
+
+  isFriend
+    ? (friends = friends.filter((e) => e._id.toString() !== friendID))
+    : friends.push(foundFriend._id)
+
+  const data = await User.findByIdAndUpdate(
+    userID,
+    { friends },
+    { new: true, runValidators: true }
+  )
+    .populate({ path: 'friends', select: 'username userPic nickname' })
+    .orFail(new AppError('User was deleted', 404))
+
+  res.status(200).json({
+    status: 'success',
+    data,
+  })
+})
+
+export { getAllUsers, getUser, updateUser, addRemoveFriend }

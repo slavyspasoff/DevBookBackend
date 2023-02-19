@@ -14,15 +14,13 @@ import AppError from '../utils/AppError.js'
 
 const { NODE_ENV } = env as Env
 
-interface RegisterReqBody {
-  username?: string
-  email?: string
-  password?: string
-  confirm?: string
-}
+type RegisterReqBody = Partial<
+  Pick<UserDocument, 'username' | 'email' | 'password' | 'confirm'>
+>
+
 interface ResBody {
   status: 'success'
-  data: UserDocument
+  data: Omit<UserDocument, 'password'>
   token: string
 }
 
@@ -55,10 +53,7 @@ const register = catchAsync(
   }
 )
 
-interface LoginReqBody {
-  email?: string
-  password?: string
-}
+type LoginReqBody = Partial<Pick<UserDocument, 'email' | 'password'>>
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
