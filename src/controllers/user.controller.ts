@@ -81,7 +81,6 @@ const getUser = catchAsync(
 )
 
 const updateUser = catchAsync(async (req, res, next) => {
-  await Promise.resolve('')
   const { id } = req.params
   const { _id: userID } = req.user as UserDocument
 

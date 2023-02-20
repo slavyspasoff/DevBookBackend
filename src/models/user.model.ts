@@ -24,19 +24,19 @@ const UserSchema = new Schema<UserDocument, UserModel, UserMethods>(
         validator: function (v: UserDocument['email']) {
           return v.includes('@') && v.includes('.')
         },
-        message: 'invalid {PATH} pattern.',
+        message: 'Please provide a valid {PATH}.',
       },
     },
     password: {
       type: String,
+      select: false,
       required: [true, 'please provide a valid {PATH}'],
-      unique: true,
       minlength: [5, '{PATH} must be between 8 and 50 characters long.'],
       maxlength: [50, '{PATH} must be between 8 and 50 characters long.'],
     },
     confirm: {
       type: String,
-      required: [true, 'please provide a confirmation password'],
+      required: [true, 'Please provide a confirmation password'],
       validate: {
         validator: function (this: UserDocument, confirm: string) {
           return confirm === this.password

@@ -82,7 +82,6 @@ const login = catchAsync(
       })
     }
 
-    //TODO: Check if still throws an error after creating Post collection
     if (posts === 'true') {
       query.populate({
         path: 'posts',
