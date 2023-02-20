@@ -29,12 +29,12 @@ const attachQueries = <T extends QueryWithHelpers<unknown, unknown>>(
   reqQueryFilters: ReqQueryFilters
 ) => {
   const { posts, friends } = reqQueryFilters
-  if (posts) {
+  if (posts === 'true') {
     query.populate({
       path: 'posts',
     })
   }
-  if (friends) {
+  if (friends === 'true') {
     query.populate({
       path: 'friends',
       select: 'username userPic nickname',
