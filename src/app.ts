@@ -29,6 +29,7 @@ app.use(cookieParser())
 app.use(cors(corsConfig))
 app.use(morgan('dev'))
 
+app.use(passport.initialize())
 JWTStrategy(passport)
 
 app.use('/uploads', express.static(uploadsFolderPath))

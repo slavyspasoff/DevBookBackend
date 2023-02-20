@@ -109,4 +109,21 @@ const logout = (req: Request, res: Response) => {
     })
 }
 
-export { register, login, logout }
+const verifyLogin = (
+  req: Request<
+    Record<string, string>,
+    Omit<ResBody, 'token'>,
+    Record<string, never>
+  >,
+  res: Response<Omit<ResBody, 'token'>>,
+  next: NextFunction
+) => {
+  req.user
+    ? res.status(200).json({
+        status: 'success',
+        data: req.user as UserDocument,
+      })
+    : next(new AppError('Please log in.', 401))
+}
+
+export { register, login, logout, verifyLogin }
