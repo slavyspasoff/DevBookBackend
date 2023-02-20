@@ -4,7 +4,7 @@ import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 import { verifyFileUpload, type Files } from './authN.helpers.js'
 import User, { type UserDocument } from '../models/user.model.js'
-import { deleteReplacedPicture } from './user.helpers.js'
+import { deleteReplacedPicture, attachQueries } from './user.helpers.js'
 interface ResBody {
   status: 'success'
   data: UserDocument
@@ -25,23 +25,8 @@ const getAllUsers = catchAsync(
     >,
     res: Response<GetAllResBody>
   ) => {
-    const { friends, posts } = req.query
+    const data = await attachQueries(User.find({}), req.query)
 
-    const query = User.find({})
-
-    if (friends === 'true') {
-      query.populate({
-        path: 'friends',
-        select: 'username userPic nickname',
-      })
-    }
-    if (posts === 'true') {
-      query.populate({
-        path: 'posts',
-      })
-    }
-
-    const data = await query
     res.status(200).json({
       status: 'success',
       results: data.length,
@@ -55,24 +40,12 @@ const getUser = catchAsync(
     req: Request<Record<string, string>, ResBody, Record<PropertyKey, never>>,
     res: Response<ResBody>
   ) => {
-    const { friends, posts } = req.query
     const { id } = req.params
 
-    const query = User.findById(id).orFail(new AppError('User not found.', 404))
+    const data = await attachQueries(User.findById(id), req.query).orFail(
+      new AppError('User not found.', 404)
+    )
 
-    if (friends === 'true') {
-      query.populate({
-        path: 'friends',
-        select: 'username userPic nickname',
-      })
-    }
-    if (posts === 'true') {
-      query.populate({
-        path: 'posts',
-      })
-    }
-
-    const data = await query
     res.status(200).json({
       status: 'success',
       data,
@@ -80,13 +53,9 @@ const getUser = catchAsync(
   }
 )
 
-const updateUser = catchAsync(async (req, res, next) => {
-  const { id } = req.params
-  const { _id: userID } = req.user as UserDocument
+const updateSelf = catchAsync(async (req, res, next) => {
+  const { _id: id } = req.user as UserDocument
 
-  if (userID.toString() !== id) {
-    return next(new AppError('Users can edit only their own profile.', 401))
-  }
   const { username, nickname, quote, email } = req.body
   const { userBanner, userPic } = verifyFileUpload(req.files as Files)
 
@@ -109,7 +78,7 @@ const updateUser = catchAsync(async (req, res, next) => {
   if (userPic) {
     await deleteReplacedPicture(req.user as UserDocument, 'userPic')
   }
-  console.log(req.files)
+
   res.status(200).json({
     status: 'success',
     data,
@@ -144,4 +113,4 @@ const addRemoveFriend = catchAsync(async (req, res, next) => {
   })
 })
 
-export { getAllUsers, getUser, updateUser, addRemoveFriend }
+export { getAllUsers, getUser, updateSelf, addRemoveFriend }
