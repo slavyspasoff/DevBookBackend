@@ -9,6 +9,7 @@ import {
 
 import User, { type UserDocument } from '../models/user.model.js'
 import { signToken, verifyFileUpload, type Files } from './authN.helpers.js'
+import { attachQueries } from './user.helpers.js'
 import catchAsync from '../utils/catchAsync.js'
 import AppError from '../utils/AppError.js'
 
@@ -68,30 +69,16 @@ const login = catchAsync(
     next: NextFunction
   ) => {
     const { email, password } = req.body
-    const { friends, posts } = req.query
 
     if (!email || !password) {
       return next(new AppError('Invalid email or password.', 401))
     }
     const query = User.findOne({ email }).select('+password')
 
-    if (friends === 'true') {
-      query.populate({
-        path: 'friends',
-        select: 'username userPic nickname',
-      })
-    }
-
-    //TODO: Check if still throws an error after creating Post collection
-    if (posts === 'true') {
-      query.populate({
-        path: 'posts',
-      })
-    }
-
-    const data = await query.orFail(
+    const data = await attachQueries(query, req.query).orFail(
       new AppError('Invalid email or password.', 401)
     )
+
     const isPasswordCorrect = await data.verifyPassword(password)
     if (!isPasswordCorrect) {
       return next(new AppError('Invalid email or password.', 401))
