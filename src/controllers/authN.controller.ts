@@ -109,21 +109,26 @@ const logout = (req: Request, res: Response) => {
     })
 }
 
-const verifyLogin = (
-  req: Request<
-    Record<string, string>,
-    Omit<ResBody, 'token'>,
-    Record<string, never>
-  >,
-  res: Response<Omit<ResBody, 'token'>>,
-  next: NextFunction
-) => {
-  req.user
-    ? res.status(200).json({
-        status: 'success',
-        data: req.user as UserDocument,
-      })
-    : next(new AppError('Please log in.', 401))
-}
+const verifyLogin = catchAsync(
+  async (
+    req: Request<
+      Record<string, string>,
+      Omit<ResBody, 'token'>,
+      Record<string, never>
+    >,
+    res: Response<Omit<ResBody, 'token'>>
+  ) => {
+    const { _id: id } = req.user as UserDocument
+    const data = await User.findById(id)
+      .populate('friends')
+      .populate('posts')
+      .orFail(new AppError('Please log in.', 401))
+
+    res.status(200).json({
+      status: 'success',
+      data,
+    })
+  }
+)
 
 export { register, login, logout, verifyLogin }

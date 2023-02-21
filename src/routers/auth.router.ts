@@ -14,7 +14,7 @@ const router = Router()
 
 router.post('/register', profileUploads, register)
 router.post('/login', login)
-router.post('/logout', logout)
+router.delete('/logout', logout)
 
 router.use(passport.authenticate('jwt', { session: false }))
 router.get('/verifyLogin', verifyLogin)
