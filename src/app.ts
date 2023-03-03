@@ -19,7 +19,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const uploadsFolderPath = join(__dirname, '../', 'uploads')
 
 const corsConfig: CorsOptions = {
-  origin: 'http://localhost:8080',
+  origin: 'http://localhost:5173',
   credentials: true,
 }
 
